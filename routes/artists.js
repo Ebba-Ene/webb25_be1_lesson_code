@@ -38,9 +38,7 @@ artistRouter.post("/", (req, res) => {
         message: "Name is required"
       })
     }
-    console.log(artists.map(a => a.id))
     const lastId = Math.max(...artists.map(a => a.id))
-    console.log(lastId)
     const artist = {
       name,
       id: lastId + 1
@@ -53,17 +51,18 @@ artistRouter.post("/", (req, res) => {
 // Uppgift 1
 artistRouter.put('/:id', (req, res) => {
   const id = Number(req.params.id)
+  
+  const { name } = req.body
+  if (!name || typeof name !== "string") {
+    return res.status(400).json({
+      message: "New artist name is required"})
+  }
+  
   const artist = artists.find(artist => artist.id === id)
   if(!artist) {
     return res.status(404).json({
       message: "Artist does not exist"
     })
-  }
-
-  const { name } = req.body
-  if (!name || typeof name !== "string") {
-    return res.status(400).json({
-      message: "New artist name is required"})
   }
 
   artist.name = name
@@ -76,14 +75,14 @@ artistRouter.put('/:id', (req, res) => {
 // UPPGIFT 2
 artistRouter.delete('/:id', (req, res) => {
   const id = Number(req.params.id)
-  const artist = artists.find(artist => artist.id === id)
-  if(!artist) {
+  const artistIndex = artists.findIndex(artist => artist.id === id)
+  if(artistIndex === -1) {
     return res.status(404).json({
       message: "Artist does not exist"
     })
   }
 
-  artists.splice(artist, 1)
+  artists.splice(artistIndex, 1)
   return res.status(204).json({
     message: "Delete successful."
   }) 
