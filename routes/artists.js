@@ -1,6 +1,5 @@
-import express from 'express';
 import { Router } from 'express';
-const router = Router();
+const artistRouter = Router();
 
 let artists = [
   { id: 1, name: 'Bad Bunny' },
@@ -8,7 +7,7 @@ let artists = [
   { id: 3, name: 'Radiohead' },
 ];
 
-router.get("/", (req, res) => {
+artistRouter.get("/", (req, res) => {
   const { q } = req.query 
   if(q) {
     return res.json(artists.filter(artist => artist.name.includes(q)))
@@ -16,7 +15,7 @@ router.get("/", (req, res) => {
   return res.json(artists)
 })
 
-router.get("/:id", (req, res) => {
+artistRouter.get("/:id", (req, res) => {
   const id = Number(req.params.id)
   if(isNaN(id)) {
     return res.status(400).json({
@@ -32,7 +31,7 @@ router.get("/:id", (req, res) => {
   return res.json(artist)
 })
 
-router.post("/", (req, res) => {
+artistRouter.post("/", (req, res) => {
     const { name } = req.body
     if(!name || typeof name !== "string"){
       return res.status(400).json({
@@ -52,7 +51,7 @@ router.post("/", (req, res) => {
 })
 
 // Uppgift 1
-router.put('/:id', (req, res) => {
+artistRouter.put('/:id', (req, res) => {
   const id = Number(req.params.id)
   const artist = artists.find(artist => artist.id === id)
   if(!artist) {
@@ -75,7 +74,7 @@ router.put('/:id', (req, res) => {
 })
 
 // UPPGIFT 2
-router.delete('/:id', (req, res) => {
+artistRouter.delete('/:id', (req, res) => {
   const id = Number(req.params.id)
   const artist = artists.find(artist => artist.id === id)
   if(!artist) {
@@ -90,4 +89,4 @@ router.delete('/:id', (req, res) => {
   }) 
 })
 
-export default router; 
+export default artistRouter; 
