@@ -34,6 +34,12 @@ export function updateArtist(id, data) {
         ...artist,
         ...data
     }
+    artists = artists.map(a => {
+        if(a.id === artist.id) {
+            return artist
+        }
+        return a
+    })
     return artist
 }
 
