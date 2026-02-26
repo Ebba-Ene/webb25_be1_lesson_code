@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { getAllArtists, getArtistByid, createArtist, updateArtist, deleteArtist } from '../db/artists.js';
 const artistRouter = Router();
 
-artistRouter.get("/", (req, res) => {
-  const artists = getAllArtists()
+artistRouter.get("/", async (req, res) => {
+  const artists = await getAllArtists()
   return res.json(artists)
 })
 
@@ -23,14 +23,14 @@ artistRouter.get("/:id", (req, res) => {
   return res.json(artist)
 })
 
-artistRouter.post("/", (req, res) => {
+artistRouter.post("/", async (req, res) => {
     const { name } = req.body
     if(!name || typeof name !== "string"){
       return res.status(400).json({
         message: "Name is required"
       })
     }
-    const artist = createArtist({name})
+    const artist = await createArtist({name})
 
     return res.status(201).json(artist)
 })
