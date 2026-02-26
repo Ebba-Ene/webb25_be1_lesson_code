@@ -1,17 +1,9 @@
 import { Router } from 'express';
+import { getAllArtists, getArtistByid, createArtist, updateArtist, deleteArtist } from '../db/artists.js';
 const artistRouter = Router();
 
-let artists = [
-  { id: 1, name: 'Bad Bunny' },
-  { id: 2, name: 'Zara Larsson' },
-  { id: 3, name: 'Radiohead' },
-];
-
 artistRouter.get("/", (req, res) => {
-  const { q } = req.query 
-  if(q) {
-    return res.json(artists.filter(artist => artist.name.includes(q)))
-  }
+  const artists = getAllArtists()
   return res.json(artists)
 })
 
@@ -22,7 +14,7 @@ artistRouter.get("/:id", (req, res) => {
       message: "Id has to be a valid number"
     })
   }
-  const artist = artists.find(artist => artist.id === id)
+  const artist = getArtistByid(id)
   if(!artist) {
     return res.status(404).json({
       message: "Artist does not exist"
@@ -38,13 +30,8 @@ artistRouter.post("/", (req, res) => {
         message: "Name is required"
       })
     }
-    const lastId = Math.max(...artists.map(a => a.id))
-    const artist = {
-      name,
-      id: lastId + 1
-    }
+    const artist = createArtist({name})
 
-    artists.push(artist)
     return res.status(201).json(artist)
 })
 
@@ -58,34 +45,29 @@ artistRouter.put('/:id', (req, res) => {
       message: "New artist name is required"})
   }
   
-  const artist = artists.find(artist => artist.id === id)
-  if(!artist) {
+  const updatedArtist = updateArtist(id, {name})
+  if(!updatedArtist) {
     return res.status(404).json({
       message: "Artist does not exist"
     })
   }
 
-  artist.name = name
-  res.json(artist)
-  return res.status(200).json({
-    message: "Updated successfully"
-  }) 
+  return res.status(200).json(updatedArtist) 
 })
 
 // UPPGIFT 2
 artistRouter.delete('/:id', (req, res) => {
   const id = Number(req.params.id)
-  const artistIndex = artists.findIndex(artist => artist.id === id)
-  if(artistIndex === -1) {
+  
+  const deleted = deleteArtist(id)
+
+  if(!deleted) {
     return res.status(404).json({
-      message: "Artist does not exist"
+      message: "Artist was not deleted or found"
     })
   }
 
-  artists.splice(artistIndex, 1)
-  return res.status(204).json({
-    message: "Delete successful."
-  }) 
+  return res.status(204).json() 
 })
 
 export default artistRouter; 
