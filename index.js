@@ -1,7 +1,9 @@
 import express from "express"
 import dotenv from 'dotenv';
 import cors from "cors"
+
 import artistRouter from "./routes/artists.js"
+import songsRouter from "./routes/songs.js";
 
 dotenv.config();
 
@@ -17,6 +19,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/artists", artistRouter)
+app.use("/api/songs", songsRouter) 
 
 const PORT = process.env.PORT || 3000
 
