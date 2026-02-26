@@ -8,7 +8,44 @@ let songs = [
 ];
 
 songRouter.get("/", (req, res) => {
-    return res.json(songs)
+    const {q, artist, sort, limit} = req.query
+
+    let filteredSongs = songs
+
+    if (q){
+        const lowerQ = q.toLowerCase()
+        filteredSongs = songs.filter((song) =>
+        song.title.toLowerCase().includes(lowerQ) ||
+        song.artist.toLowerCase().includes(lowerQ)
+    )
+    }
+    if (artist) {
+        filteredSongs = songs.filter((song => 
+            song.artist.toLowerCase() === artist.toLowerCase()
+        ))
+    }
+    if (sort){
+        console.log(sort)
+        if (sort !== 'title' && sort !== 'artist'){
+            return res.status(400).json({
+                message: 'Sort must be title or artist'
+            })
+        }
+        filteredSongs = [...filteredSongs].sort((a, b) => a[sort].localeCompare(b[sort]))
+    }
+    if (limit){
+        const limitNum = Number(limit)
+          if (!Number.isInteger(limitNum) || limitNum <= 0) {
+        return res.status(400).json({
+            message: "Limit must be a positive integer"
+        })
+    }
+    filteredSongs = filteredSongs.slice(0, limitNum)
+    }
+
+
+
+    return res.json(filteredSongs)
 })
 
 songRouter.get("/:id", (req, res) => {
