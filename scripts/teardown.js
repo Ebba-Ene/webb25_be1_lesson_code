@@ -6,7 +6,7 @@ async function teardown() {
     await connectToDb("sqotifyv2");
     await Song.deleteMany();   // Clear songs before artists
     await Artist.deleteMany();
-    console.log("Database cleared");
+    console.info("Database cleared");
     await disconnectFromDb();  // Disconnect so process can exit
 }
 
