@@ -1,8 +1,17 @@
 import Artist from "../models/Artist.js";
+import { getFullTextSearch } from "../utils/fullTextSearch.js";
 
-export async function getAllArtists() {
+export async function getAllArtists(q) {
+  let filter = { }
+  if (q) {
+    filter = {
+      ...filter,
+      ...getFullTextSearch(q, true, "name"),
+    }
+  }
+  console.log(filter)
   try {
-    return await Artist.find();
+    return await Artist.find(filter);
   } catch (err) {
     console.error("Unable to read from 'Artists'", err)
     return []

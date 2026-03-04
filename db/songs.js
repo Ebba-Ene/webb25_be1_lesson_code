@@ -1,8 +1,16 @@
 import Song from "../models/Song.js";
+import { getFullTextSearch } from "../utils/fullTextSearch.js";
 
-export async function getAllSongs() {
+export async function getAllSongs(q) {
+  let filter = { }
+  if (q) {
+    filter = {
+      ...filter,
+      ...getFullTextSearch(q),
+    }
+  }
   try {
-    return await Song.find();
+    return await Song.find(filter);
   } catch (err) {
     console.error("Unable to read from 'Songs'", err)
     return []

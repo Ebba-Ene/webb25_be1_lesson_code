@@ -9,7 +9,8 @@ import {
 const artistRouter = Router()
 
 artistRouter.get("/", async (req, res) => {
-  const artists = await getAllArtists()
+  const { q } = req.query
+  const artists = await getAllArtists(q)
   return res.json(artists)
 })
 

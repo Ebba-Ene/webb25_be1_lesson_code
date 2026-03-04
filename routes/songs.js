@@ -10,61 +10,19 @@ import {
 const songRouter = Router()
 
 songRouter.get("/", async (req, res) => {
-  const songs = await getAllSongs()
-  const { q, artist, sort, limit } = req.query
-
-  let filteredSongs = songs.filter((song) => !song.deleted)
-
-  // Filters chain: each narrows the previous result
-  if (q) {
-    const lowerQ = q.toLowerCase()
-    filteredSongs = filteredSongs.filter(
-      (song) =>
-        song.title.toLowerCase().includes(lowerQ) ||
-        song.artist.toLowerCase().includes(lowerQ),
-    )
-  }
-  if (artist) {
-    filteredSongs = filteredSongs.filter(
-      (song) => song.artist.toLowerCase() === artist.toLowerCase(),
-    )
-  }
-  if (sort) {
-    if (sort !== "title" && sort !== "artist") {
-      return res.status(400).json({
-        message: "Sort must be title or artist",
-      })
-    }
-    filteredSongs = [...filteredSongs].sort((a, b) =>
-      a[sort].localeCompare(b[sort]),
-    )
-  }
-  if (limit) {
-    const limitNum = Number(limit)
-    if (!Number.isInteger(limitNum) || limitNum <= 0) {
-      return res.status(400).json({
-        message: "Limit must be a positive integer",
-      })
-    }
-    filteredSongs = filteredSongs.slice(0, limitNum)
-  }
-
-  return res.json(filteredSongs)
+  const { q } = req.query
+  const songs = await getAllSongs(q)
+  return res.json(songs)
 })
 
 songRouter.get("/:id", async (req, res) => {
-  const id = Number(req.params.id)
-  if (isNaN(id)) {
-    return res.status(400).json({
-      message: "Id has to be a valid number",
-    })
-  }
+  const id = req.params.id
   const song = await getSongByid(id)
-  if (!song || song.deleted === true) {
+  if (!song) {
     return res.status(404).json({
       message: "Song does not exist",
     })
-  }
+  }  
   return res.json(song)
 })
 
@@ -86,7 +44,7 @@ songRouter.post("/", async (req, res) => {
 })
 
 songRouter.put("/:id", async (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
 
   const { title, artist } = req.body
   if (
@@ -110,13 +68,8 @@ songRouter.put("/:id", async (req, res) => {
 })
 
 songRouter.delete("/:id", async (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
 
-  if (isNaN(id)) {
-    return res.status(400).json({
-      message: "Id has to be a valid number",
-    })
-  }
   const deleted = await deleteSong(id)
   if (!deleted) {
     return res.status(404).json({
