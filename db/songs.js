@@ -1,80 +1,46 @@
-import fs from "fs/promises"
+import Song from "../models/Song.js";
 
-const DATA_PATH = new URL("../data/songs.json", import.meta.url)
-
-async function readSongs() {
+export async function getAllSongs() {
   try {
-    const file = await fs.readFile(DATA_PATH, "utf8")
-    const songsJSON = file.toString()
-    const songs = JSON.parse(songsJSON)
-    if (!Array.isArray(songs)) {
-      throw new Error("Songs is not in an array")
-    }
-    return songs
+    return await Song.find();
   } catch (err) {
-    console.log("Unable to read from 'data/songs.json'", err)
+    console.log("Unable to read from 'Songs'", err)
     return []
-  }
-}
-async function writeSongs(songs = []) {
-  const songsJSON = JSON.stringify(songs, null, 2)
-  try {
-    await fs.writeFile(DATA_PATH, songsJSON)
-  } catch (err) {
-    console.log("Unable to write to 'data/songs.json'", err)
   }
 }
 
 export async function getSongByid(id) {
-  const _songs = await readSongs()
-  console.log(id)
-  return _songs.find((song) => song.id === id) || null
+  try {
+    return await Song.findById(id);
+  } catch (err) {
+    console.log("Unable to read from 'Song'", err)
+    return null
+  }
 }
 
 export async function createSong(data) {
-  const _songs = await readSongs()
-  const lastId = Math.max(..._songs.map((a) => a.id)) || 0
-  const newSong = {
-    ...data,
-    id: lastId + 1,
+  try {
+    return await Song.create(data);
+  } catch (err) {
+    console.log("Unable to create 'Song'", err)
+    return null
   }
-  _songs.push(newSong)
-
-  await writeSongs(_songs)
-
-  return newSong
 }
 
 export async function updateSong(id, data) {
-  let _songs = await readSongs()
-  let song = _songs.find((a) => a.id === id && !a.deleted)
-  if (!song) return null
-  song = {
-    ...song,
-    ...data,
+  try {
+    return await Song.findByIdAndUpdate(id, data, { new: true });
+  } catch (err) {
+    console.log("Unable to update 'Song'", err)
+    return null
   }
-  _songs = _songs.map((a) => {
-    if (a.id === song.id) {
-      console.log("entered found id")
-      return song
-    }
-    console.log("not found id")
-    return a
-  })
-  await writeSongs(_songs)
-  return song
-}
-
-export async function getAllSongs() {
-  const _songs = await readSongs()
-  return _songs
 }
 
 export async function deleteSong(id) {
-  let _songs = await readSongs()
-  const songIndex = _songs.findIndex((song) => song.id === id && !song.deleted)
-  if (songIndex === -1) return false
-  _songs[songIndex].deleted = true
-  await writeSongs(_songs)
-  return true
+  try {
+    return !!(await Song.findByIdAndDelete(id));
+  } catch (err) {
+    console.log("Unable to delete 'Song'", err)
+    return false
+  }
 }
