@@ -27,14 +27,14 @@ connectToDb("sqotifyv2")
     .then(() => {
         app.listen(PORT, (error) => {
             if (error) {
-                console.log("Error in running express", error.message)
+                console.warn("Error in running express", error.message)
                 throw new Error(error.message)
             }
-            console.log(`Server is running on port ${PORT}`)
+            console.info(`Server is running on port ${PORT}`)
         })
 
     }).catch((error) => {
-        console.log("Error connecting to database", error)
+        console.error("Error connecting to database", error)
         disconnectFromDb()
         throw new Error(error.message)
     })

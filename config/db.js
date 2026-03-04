@@ -10,7 +10,7 @@ export async function connectToDb(dbName) {
     // Avoid double slash when MONGODB_URI already ends with /
     const uri = MONGODB_URI.endsWith("/") ? `${MONGODB_URI}${dbName}` : `${MONGODB_URI}/${dbName}`;
     await mongoose.connect(uri);
-    console.log(`Connected to ${dbName} database`);
+    console.info(`Connected to ${dbName} database`);
   } catch (err) {
     console.error("Error connecting to database", err);
   }
@@ -20,7 +20,7 @@ export async function disconnectFromDb() {
   if (mongoose.connection.readyState === 0) return;
   try {
     await mongoose.disconnect();
-    console.log("Disconnected from database");
+    console.info("Disconnected from database");
   } catch (err) {
     console.error("Error disconnecting from database", err);
   }

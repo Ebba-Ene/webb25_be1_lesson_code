@@ -12,7 +12,7 @@ async function seedArtists() {
     // Use _id from file to keep ids stable across teardown/reseed
     const toInsert = artistsFromFile.map(a => ({ _id: a._id, name: a.name }));
     await Artist.insertMany(toInsert);
-    console.log("Artists seeded");
+    console.info("Artists seeded");
 }
 
 async function seedSongs() {
@@ -20,7 +20,7 @@ async function seedSongs() {
     const songsFromFile = JSON.parse(await readFile(SONGS_PATH, "utf8"));
     const toInsert = songsFromFile.map(s => ({ _id: s._id, title: s.title, artist: s.artist }));
     await Song.insertMany(toInsert);
-    console.log("Songs seeded");
+    console.info("Songs seeded");
 }
 
 async function seedIfEmpty() {

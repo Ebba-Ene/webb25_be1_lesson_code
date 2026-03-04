@@ -4,7 +4,7 @@ export async function getAllSongs() {
   try {
     return await Song.find();
   } catch (err) {
-    console.log("Unable to read from 'Songs'", err)
+    console.error("Unable to read from 'Songs'", err)
     return []
   }
 }
@@ -13,7 +13,7 @@ export async function getSongByid(id) {
   try {
     return await Song.findById(id);
   } catch (err) {
-    console.log("Unable to read from 'Song'", err)
+    console.error("Unable to read from 'Song'", err)
     return null
   }
 }
@@ -22,7 +22,7 @@ export async function createSong(data) {
   try {
     return await Song.create(data);
   } catch (err) {
-    console.log("Unable to create 'Song'", err)
+    console.error("Unable to create 'Song'", err)
     return null
   }
 }
@@ -31,7 +31,7 @@ export async function updateSong(id, data) {
   try {
     return await Song.findByIdAndUpdate(id, data, { new: true });
   } catch (err) {
-    console.log("Unable to update 'Song'", err)
+    console.error("Unable to update 'Song'", err)
     return null
   }
 }
@@ -40,7 +40,7 @@ export async function deleteSong(id) {
   try {
     return !!(await Song.findByIdAndDelete(id));
   } catch (err) {
-    console.log("Unable to delete 'Song'", err)
+    console.error("Unable to delete 'Song'", err)
     return false
   }
 }
