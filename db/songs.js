@@ -10,7 +10,7 @@ export async function getAllSongs(q) {
     }
   }
   try {
-    return await Song.find(filter).populate("artist");
+    return await Song.find(filter).populate("artist", "name");
   } catch (err) {
     console.error("Unable to read from 'Songs'", err)
     return []
