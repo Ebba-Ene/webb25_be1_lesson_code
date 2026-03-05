@@ -10,7 +10,7 @@ async function seedArtists() {
     if ((await Artist.countDocuments()) > 0) return;
     const artistsFromFile = JSON.parse(await readFile(ARTISTS_PATH, "utf8"));
     // Use _id from file to keep ids stable across teardown/reseed
-    const toInsert = artistsFromFile.map(a => ({ _id: a._id, name: a.name }));
+    const toInsert = artistsFromFile.map(a => ({ _id: a._id, name: a.name, slug: a.slug }));
     await Artist.insertMany(toInsert);
     console.info("Artists seeded");
 }

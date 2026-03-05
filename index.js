@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/artists", artistRouter)
 app.use("/api/songs", songRouter)
+
 const PORT = process.env.PORT || 3000
 
 // Start server only after DB connection
