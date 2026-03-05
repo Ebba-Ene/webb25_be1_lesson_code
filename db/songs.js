@@ -10,7 +10,7 @@ export async function getAllSongs(q) {
     }
   }
   try {
-    return await Song.find(filter).populate("artist", "name");
+    return await Song.find(filter).populate("artist", "name").populate("album", "title");
   } catch (err) {
     console.error("Unable to read from 'Songs'", err)
     return []
@@ -19,7 +19,7 @@ export async function getAllSongs(q) {
 
 export async function getSongByid(id) {
   try {
-    return await Song.findById(id).populate("artist");
+    return await Song.findById(id).populate("artist").populate("album", "title");
   } catch (err) {
     console.error("Unable to read from 'Song'", err)
     return null
@@ -28,7 +28,7 @@ export async function getSongByid(id) {
 
 export async function createSong(data) {
   try {
-    const newSong = (await Song.create(data)).populate("artist")
+    const newSong = (await Song.create(data)).populate("artist").populate("album", "title");
     return newSong
   } catch (err) {
     console.error("Unable to create 'Song'", err)
@@ -38,7 +38,7 @@ export async function createSong(data) {
 
 export async function updateSong(id, data) {
   try {
-    const updatedSong = await Song.findByIdAndUpdate(id, data, { new: true }).populate("artist");
+    const updatedSong = await Song.findByIdAndUpdate(id, data, { new: true }).populate("artist").populate("album", "title");
     return updatedSong
   } catch (err) {
     console.error("Unable to update 'Song'", err)

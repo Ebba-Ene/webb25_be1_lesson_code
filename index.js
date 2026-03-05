@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from "cors"
 import artistRouter from "./routes/artists.js"
 import songRouter from "./routes/songs.js"
+import albumRouter from "./routes/albums.js"
 import { connectToDb, disconnectFromDb } from "./config/db.js";
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/artists", artistRouter)
 app.use("/api/songs", songRouter)
+app.use("/api/albums", albumRouter)
 
 const PORT = process.env.PORT || 3000
 

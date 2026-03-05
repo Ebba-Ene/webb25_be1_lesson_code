@@ -8,6 +8,11 @@ const songSchema = new mongoose.Schema(
       ref: "Artist",
       required: true,
     },
+    album: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Album",
+      required: false,
+    },
   },
   {
     timestamps: true,
@@ -16,12 +21,8 @@ const songSchema = new mongoose.Schema(
   },
 );
 
-songSchema.virtual("artistName").get(function () {
-  return this.artist ? this.artist.name : null;
-});
-
 // Add text index for title and artist fields for full-text search
-songSchema.index({ title: "text", artistName: "text" });
+songSchema.index({ title: "text" });
 
 const Song = mongoose.model("Song", songSchema);
 
