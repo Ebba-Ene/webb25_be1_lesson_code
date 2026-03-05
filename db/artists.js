@@ -29,7 +29,10 @@ export async function getArtistByid(id) {
 
 export async function createArtist(data) {
   try {
-    return await Artist.create(data);
+    return await Artist.create({
+      ...data,
+      slug: data.name
+    });
   } catch (err) {
     console.error("Unable to create 'Artist'", err)
     return null
