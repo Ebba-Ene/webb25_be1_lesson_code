@@ -21,6 +21,7 @@ app.use("/api/artists", artistRouter)
 app.use("/api/songs", songRouter)
 app.use("/api/albums", albumRouter)
 app.use(express.static("frontend"))
+app.use("/data", express.static("data"))
 
 const PORT = process.env.PORT || 3000
 
