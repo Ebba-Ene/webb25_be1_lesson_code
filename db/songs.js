@@ -28,8 +28,9 @@ export async function getSongByid(id) {
 
 export async function createSong(data) {
   try {
-    const newSong = (await Song.create(data)).populate("artist").populate("album", "title");
-    return newSong
+    const newSong = (await Song.create(data))
+    const fetchedSong = await Song.findById(newSong._id).populate("artist").populate("album", "title");
+    return fetchedSong
   } catch (err) {
     console.error("Unable to create 'Song'", err)
     return null
