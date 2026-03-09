@@ -13,15 +13,14 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
-app.get("/", (req, res) => {
-    return res.json({
-        message: "Healthy?"
-    })
+app.get("/api/health", (req, res) => {
+    return res.json({ message: "Healthy?" })
 })
 
 app.use("/api/artists", artistRouter)
 app.use("/api/songs", songRouter)
 app.use("/api/albums", albumRouter)
+app.use(express.static("frontend"))
 
 const PORT = process.env.PORT || 3000
 
