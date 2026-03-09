@@ -29,7 +29,7 @@ export async function getSongByid(id) {
 export async function createSong(data) {
   try {
     const newSong = new Song(data)
-    await newSong.save
+    await newSong.save()
     const fetchedSong = await Song.findById(newSong._id).populate("artist").populate("album", "title");
     return fetchedSong
   } catch (err) {
