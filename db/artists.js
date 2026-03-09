@@ -43,7 +43,7 @@ export async function updateArtist(id, data) {
   try {
     const updatedArtist = await Artist.findById(id)
     if (!updatedArtist) return null;
-    updatedArtist.name = data.name ?? updateArtist.name
+    updatedArtist.name = data.name ?? updatedArtist.name
     await updatedArtist.save()
     return updatedArtist;
   } catch (err) {
