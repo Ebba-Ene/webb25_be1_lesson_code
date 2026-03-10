@@ -1,10 +1,12 @@
 import express from "express"
 import dotenv from 'dotenv';
 import cors from "cors"
+import { connectToDb, disconnectFromDb } from "./config/db.js";
+
 import artistRouter from "./routes/artists.js"
 import songRouter from "./routes/songs.js"
 import albumRouter from "./routes/albums.js"
-import { connectToDb, disconnectFromDb } from "./config/db.js";
+import playlistRouter from "./routes/playlists.js";
 
 dotenv.config();
 
@@ -20,6 +22,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/artists", artistRouter)
 app.use("/api/songs", songRouter)
 app.use("/api/albums", albumRouter)
+app.use("/api/playlists", playlistRouter)
 app.use(express.static("frontend"))
 app.use("/data", express.static("data"))
 
