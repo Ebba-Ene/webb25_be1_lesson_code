@@ -28,6 +28,22 @@ const userSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
+});
+
+userSchema.pre("save", async function() {
+    if(!this.isModified("password")) return
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(this.password, salt)
+    console.log("Password: ", this.password)
+    console.log("Hashed password: ", hashedPassword)
+    const isSame = await bcrypt.compare(this.password, hashedPassword)
+    console.log("is same", isSame)
+    const isNotSame = await bcrypt.compare(this.password.toUpperCase(), hashedPassword)
+    console.log("is not same", isNotSame)
+
+    this.password = hashedPassword
+
 })
 
 const User = mongoose.model("User", userSchema)
