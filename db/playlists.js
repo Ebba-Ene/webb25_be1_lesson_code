@@ -19,7 +19,10 @@ export async function getAllPlaylists(q) {
 
 export async function getPlaylistByid(id) {
   try {
-    return await Playlist.findById(id).populate("songs");
+    return await Playlist.findById(id).populate({ path: "songs", populate: [
+    { path: "artist", select: "name" },
+    { path: "album", select: "title" }
+  ] });
   } catch (err) {
     console.error("Unable to read from 'Playlist'", err)
     return null
@@ -43,7 +46,10 @@ export async function addSongToPlaylist(id, song) {
       }
     }, {
       returnDocument: "after"
-    }).populate("songs")
+    }).populate({ path: "songs", populate: [
+    { path: "artist", select: "name" },
+    { path: "album", select: "title" }
+  ] })
     if(!updatedPlaylist) {
       return null
     }
@@ -54,14 +60,27 @@ export async function addSongToPlaylist(id, song) {
   }
 }
 
-// export async function updatePlaylist(id, data) {
-//   try {
-//     return await Playlist.findByIdAndUpdate(id, data, { new: true }).populate("artist", "name");
-//   } catch (err) {
-//     console.error("Unable to update 'Playlist'", err)
-//     return null
-//   }
-// }
+export async function removeSongFromPlaylist(id, song) {
+  try {
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(id, {
+      $pull: {
+        songs: song
+      }
+    }, {
+      returnDocument: "after"
+    }).populate({ path: "songs", populate: [
+    { path: "artist", select: "name" },
+    { path: "album", select: "title" }
+  ] })
+    if(!updatedPlaylist) {
+      return null
+    }
+    return updatedPlaylist
+  } catch (err) {
+    console.error("Unable to remove song from 'Playlist'", err)
+    return null
+  }
+}
 
 export async function deletePlaylist(id) {
   try {
