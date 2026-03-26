@@ -7,6 +7,7 @@ import {
   updateSong,
   deleteSong,
 } from "../db/songs.js"
+import { requireAdmin, requireAuth } from "../middlewares/auth.js"
 const songRouter = Router()
 
 songRouter.get("/", async (req, res) => {
@@ -26,7 +27,7 @@ songRouter.get("/:id", async (req, res) => {
   return res.json(song)
 })
 
-songRouter.post("/", async (req, res) => {
+songRouter.post("/", requireAuth, requireAdmin, async (req, res) => {
   const { title, artist, album } = req.body
   if (
     !title ||
