@@ -72,7 +72,7 @@ songRouter.put("/:id", async (req, res) => {
   return res.status(200).json(song)
 })
 
-songRouter.delete("/:id", async (req, res) => {
+songRouter.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
   const id = req.params.id
 
   const deleted = await deleteSong(id)
